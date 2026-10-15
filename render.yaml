@@ -1,0 +1,24 @@
+databases:
+  - name: trotamundos-db
+    plan: free
+    databaseName: trotamundos_db
+    user: trotamundos
+
+services:
+  - type: web
+    name: trotamundos-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trotamundos-db
+          property: connectionString
+      - key: Jwt__Secret
+        generateValue: true
+      - key: Database__MigrarAlIniciar
+        value: "true"
+      - key: SuperAdmin__Password
+        sync: false
