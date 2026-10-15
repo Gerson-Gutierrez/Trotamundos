@@ -1,0 +1,16 @@
+@Trotamundos_HostAddress = http://localhost:5200
+
+### Registro
+POST {{Trotamundos_HostAddress}}/api/auth/registro
+Content-Type: application/json
+
+{ "nombre": "Ana", "apellido": "Pérez", "email": "ana@test.com", "password": "Secreta123", "nacionalidad": "Argentina" }
+
+### Login
+POST {{Trotamundos_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "ana@test.com", "password": "Secreta123" }
+
+### Países
+GET {{Trotamundos_HostAddress}}/api/mapas/paises?q=arg
