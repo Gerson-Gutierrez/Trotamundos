@@ -79,6 +79,19 @@ public class SuperAdminService : ISuperAdminService
         var password = _config["SuperAdmin:Password"];
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password)) return;
 
+        // Cambio de email del superadministrador (SuperAdmin:EmailAnterior → SuperAdmin:Email), conservando su contraseña
+        var emailAnterior = _config["SuperAdmin:EmailAnterior"]?.Trim().ToLower();
+        if (!string.IsNullOrEmpty(emailAnterior) && emailAnterior != email
+            && await _usuarios.ObtenerPorEmailAsync(email) == null)
+        {
+            var anterior = await _usuarios.ObtenerPorEmailAsync(emailAnterior);
+            if (anterior is { EsSuperAdmin: true })
+            {
+                anterior.Email = email;
+                await _usuarios.GuardarCambiosAsync();
+            }
+        }
+
         if (await _usuarios.ExisteSuperAdminAsync()) return;
 
         PasswordHasher.Crear(password, out var hash, out var salt);
